@@ -1,44 +1,54 @@
 import { useState } from 'react'
 import { Menu, X } from 'lucide-react'
 
-export default function Header() {
+export default function Header({ currentPage, onNavigate }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
 
   const navItems = [
-    { name: 'Home', href: '#' },
-    { name: 'Products', href: '#products' },
-    { name: 'Contact', href: '#contact' },
+    { name: 'Home', page: 'home' },
+    { name: 'About Us', page: 'about' },
+    { name: 'Shop', page: 'shop' },
+    { name: 'Contact Us', page: 'contact' },
   ]
+
+  const handleNavClick = (page) => {
+    onNavigate(page)
+    setIsMenuOpen(false)
+  }
 
   return (
     <nav className="bg-white shadow-md fixed w-full top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16 md:h-20">
-          <a href="#" className="flex items-center space-x-3">
+          <button onClick={() => onNavigate('home')} className="flex items-center space-x-3">
             <img
               src="/logo-dark.png"
               alt="2Z City Interiors logo"
               className="h-12 w-auto"
               height="48"
             />
-          </a>
+          </button>
 
           <div className="hidden md:flex items-center space-x-8">
             {navItems.map((item) => (
-              <a
-                key={item.href}
-                href={item.href}
-                className="text-base font-medium transition-colors text-brand-dark hover:text-brand-primary"
+              <button
+                key={item.page}
+                onClick={() => handleNavClick(item.page)}
+                className={`text-base font-medium transition-colors ${
+                  currentPage === item.page 
+                    ? 'text-brand-primary' 
+                    : 'text-brand-dark hover:text-brand-primary'
+                }`}
               >
                 {item.name}
-              </a>
+              </button>
             ))}
-            <a
-              href="#contact"
+            <button
+              onClick={() => handleNavClick('contact')}
               className="bg-brand-primary text-white px-6 py-2 rounded-lg hover:bg-brand-accent transition-colors font-medium"
             >
               Get in Touch
-            </a>
+            </button>
           </div>
 
           <button
@@ -55,22 +65,24 @@ export default function Header() {
         <div className="md:hidden bg-white border-t border-gray-200">
           <div className="px-4 py-4 space-y-3">
             {navItems.map((item) => (
-              <a
-                key={item.href}
-                href={item.href}
-                onClick={() => setIsMenuOpen(false)}
-                className="block w-full text-left px-4 py-2 rounded-lg font-medium transition-colors text-brand-dark hover:bg-gray-100"
+              <button
+                key={item.page}
+                onClick={() => handleNavClick(item.page)}
+                className={`block w-full text-left px-4 py-2 rounded-lg font-medium transition-colors ${
+                  currentPage === item.page
+                    ? 'bg-brand-primary/10 text-brand-primary'
+                    : 'text-brand-dark hover:bg-gray-100'
+                }`}
               >
                 {item.name}
-              </a>
+              </button>
             ))}
-            <a
-              href="#contact"
-              onClick={() => setIsMenuOpen(false)}
+            <button
+              onClick={() => handleNavClick('contact')}
               className="block w-full text-left bg-brand-primary text-white px-4 py-2 rounded-lg hover:bg-brand-accent transition-colors font-medium"
             >
               Get in Touch
-            </a>
+            </button>
           </div>
         </div>
       )}

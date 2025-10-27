@@ -1,7 +1,7 @@
 import { ArrowRight, Star } from 'lucide-react'
 import { sampleProducts } from '../data/sampleProducts'
 
-export default function ProductsSection() {
+export default function ProductsSection({ onNavigate }) {
   const featuredProducts = sampleProducts.filter(p => p.featured).slice(0, 6)
 
   return (
@@ -50,9 +50,12 @@ export default function ProductsSection() {
                   <span className="text-2xl font-bold text-primary-700">
                     UGX {product.price.toLocaleString()}
                   </span>
-                  <span className="text-primary-700 group-hover:translate-x-1 transition-transform flex items-center">
+                  <button
+                    onClick={() => onNavigate('product-detail', product.id)}
+                    className="text-primary-700 group-hover:translate-x-1 transition-transform flex items-center hover:text-primary-800"
+                  >
                     View Details <ArrowRight className="ml-1 h-4 w-4" />
-                  </span>
+                  </button>
                 </div>
               </div>
             </div>
@@ -60,13 +63,13 @@ export default function ProductsSection() {
         </div>
 
         <div className="text-center mt-12">
-          <a
-            href="#contact"
+          <button
+            onClick={() => onNavigate('contact')}
             className="bg-primary-700 text-white px-8 py-3 rounded-lg hover:bg-primary-800 transition-all hover:shadow-lg font-semibold inline-flex items-center"
           >
             Contact Us for More
             <ArrowRight className="ml-2 h-5 w-5" />
-          </a>
+          </button>
         </div>
       </div>
     </section>
