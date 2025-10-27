@@ -1,4 +1,6 @@
 import { useState } from 'react'
+import Header from './components/Header'
+import Footer from './components/Footer'
 
 const PhoneIcon = ({ className = 'h-6 w-6' }) => (
   <svg
@@ -99,7 +101,9 @@ function App() {
   }
 
   return (
-    <main className="relative flex min-h-screen flex-col items-center justify-center gap-12 bg-brand-hero bg-cover bg-center bg-fixed px-6 py-12 text-white">
+    <>
+      <Header />
+      <main className="relative flex min-h-screen flex-col items-center justify-center gap-12 bg-brand-hero bg-cover bg-center bg-fixed px-6 py-24 text-white" id="home">
       <div className="absolute inset-0 bg-black/30" aria-hidden="true" />
 
       <div className="relative z-10 flex w-full max-w-5xl flex-col items-center gap-12">
@@ -147,7 +151,7 @@ function App() {
           )}
         </section>
 
-        <section className="w-full max-w-2xl space-y-6 mt-12" aria-labelledby="contact-title">
+        <section className="w-full max-w-2xl space-y-6 mt-12" aria-labelledby="contact-title" id="contact">
           <h2 id="contact-title" className="text-center text-sm font-medium uppercase tracking-[0.3em] text-white/70">
             Get in touch
           </h2>
@@ -247,7 +251,9 @@ function App() {
         <WhatsAppIcon className="h-6 w-6" />
         <span className="hidden sm:inline">WhatsApp</span>
       </a>
-    </main>
+      </main>
+      <Footer />
+    </>
   )
 }
 
