@@ -1,0 +1,39 @@
+@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+@theme {
+  --color-brand-primary: #8b0b24;
+  --color-brand-accent: #1746a2;
+  --color-brand-dark: #1a1a1f;
+  
+  --font-sans: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+
+@layer base {
+  body {
+    background-color: #1a1a1f;
+    min-height: 100vh;
+    color: white;
+  }
+}
+
+@layer components {
+  .glass-panel {
+    border-radius: 1.5rem;
+    border: 1px solid rgb(255 255 255 / 0.1);
+    background: rgb(255 255 255 / 0.1);
+    backdrop-filter: blur(24px);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+  }
+  
+  .text-shadow-glow {
+    text-shadow: 0 16px 40px rgba(0, 0, 0, 0.45);
+  }
+}
+
+@layer utilities {
+  .bg-brand-hero {
+    background-image: linear-gradient(135deg, rgba(139, 11, 36, 0.92), rgba(23, 70, 162, 0.88)), 
+                      url('https://images.unsplash.com/photo-1505691938895-1758d7feb511?auto=format&fit=crop&w=1740&q=80');
+  }
+}
