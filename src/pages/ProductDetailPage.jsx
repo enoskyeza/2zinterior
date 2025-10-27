@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { ArrowLeft, Check, Package, Ruler, Star, Shield } from 'lucide-react'
 
-export default function ProductDetailPage({ onNavigate, product, relatedProducts }) {
+export default function ProductDetailPage({ onNavigate, onBack, product, relatedProducts }) {
   const [selectedImage, setSelectedImage] = useState(0)
 
   if (!product) {
@@ -25,11 +25,11 @@ export default function ProductDetailPage({ onNavigate, product, relatedProducts
       <div className="bg-gray-50 py-4">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <button
-            onClick={() => onNavigate('shop')}
+            onClick={() => (onBack ? onBack() : onNavigate('home'))}
             className="flex items-center text-gray-600 hover:text-brand-primary transition-colors"
           >
             <ArrowLeft className="h-4 w-4 mr-2" />
-            Back to Shop
+            Back
           </button>
         </div>
       </div>

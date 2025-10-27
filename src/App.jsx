@@ -12,12 +12,29 @@ import { MessageCircle } from 'lucide-react'
 function App() {
   const [currentPage, setCurrentPage] = useState('home')
   const [selectedProductId, setSelectedProductId] = useState(null)
+  const [NAV_STACK, setNavStack] = useState([])
 
   const handleNavigate = (page, productId) => {
+    setNavStack(prev => [...prev, { page: currentPage, productId: selectedProductId }])
     setCurrentPage(page)
-    if (productId) {
+    if (typeof productId !== 'undefined') {
       setSelectedProductId(productId)
     }
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+
+  const handleBack = () => {
+    setNavStack(prev => {
+      if (prev.length === 0) {
+        setCurrentPage('home')
+        setSelectedProductId(null)
+        return prev
+      }
+      const last = prev[prev.length - 1]
+      setCurrentPage(last.page)
+      setSelectedProductId(last.productId || null)
+      return prev.slice(0, -1)
+    })
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
@@ -40,6 +57,7 @@ function App() {
       {currentPage === 'product-detail' && (
         <ProductDetailPage
           onNavigate={handleNavigate}
+          onBack={handleBack}
           product={selectedProduct}
           relatedProducts={relatedProducts}
         />
