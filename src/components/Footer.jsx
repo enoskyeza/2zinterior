@@ -2,11 +2,16 @@ import { Mail, Phone, MapPin, Facebook, Instagram, Twitter } from 'lucide-react'
 
 export default function Footer() {
   return (
-    <footer className="bg-brand-dark text-white">
+    <footer className="bg-brand-dark text-white" id="contact">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="space-y-4">
-            <h3 className="font-display text-2xl font-bold text-white">2Z City Interiors</h3>
+            <img
+              src="/logo-red.png"
+              alt="2Z City Interiors logo"
+              className="h-12 w-auto"
+              height="48"
+            />
             <p className="text-sm leading-relaxed text-white/80">
               Handcrafting premium furniture with authentic Ugandan craftsmanship. Each piece tells a story of tradition and excellence.
             </p>

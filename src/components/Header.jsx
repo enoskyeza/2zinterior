@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Menu, X, Armchair } from 'lucide-react'
+import { Menu, X } from 'lucide-react'
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -14,13 +14,13 @@ export default function Header() {
     <nav className="bg-white shadow-md fixed w-full top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16 md:h-20">
-          <a href="#" className="flex items-center space-x-2 group">
-            <div className="bg-brand-primary p-2 rounded-lg group-hover:bg-brand-accent transition-colors">
-              <Armchair className="h-6 w-6 text-white" />
-            </div>
-            <span className="font-display text-2xl font-bold text-brand-primary">
-              2Z City Interiors
-            </span>
+          <a href="#" className="flex items-center space-x-3">
+            <img
+              src="/logo-dark.png"
+              alt="2Z City Interiors logo"
+              className="h-12 w-auto"
+              height="48"
+            />
           </a>
 
           <div className="hidden md:flex items-center space-x-8">

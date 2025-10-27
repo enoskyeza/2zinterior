@@ -1,20 +1,49 @@
 @import "tailwindcss";
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800&display=swap');
 
 @theme {
+  /* Brand colors */
   --color-brand-primary: #8b0b24;
   --color-brand-accent: #1746a2;
   --color-brand-dark: #1a1a1f;
   
+  /* Primary scale (red tones for actions) */
+  --color-primary-50: #fef5f3;
+  --color-primary-100: #fde9e4;
+  --color-primary-200: #fbd0c5;
+  --color-primary-300: #f7ae9c;
+  --color-primary-400: #f28266;
+  --color-primary-500: #e85f3f;
+  --color-primary-600: #d4452a;
+  --color-primary-700: #b23620;
+  --color-primary-800: #93301f;
+  --color-primary-900: #7a2c1f;
+  --color-primary-950: #42140c;
+  
+  /* Accent scale (blue tones for highlights) */
+  --color-accent-50: #eff6ff;
+  --color-accent-100: #dbeafe;
+  --color-accent-200: #bfdbfe;
+  --color-accent-300: #93c5fd;
+  --color-accent-400: #60a5fa;
+  --color-accent-500: #3b82f6;
+  --color-accent-600: #2563eb;
+  --color-accent-700: #1d4ed8;
+  --color-accent-800: #1e40af;
+  --color-accent-900: #1e3a8a;
+  --color-accent-950: #172554;
+  
+  /* Fonts */
   --font-sans: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
-  --font-display: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  --font-display: 'Playfair Display', 'Georgia', serif;
 }
 
 @layer base {
   body {
-    background-color: #1a1a1f;
+    background-color: white;
     min-height: 100vh;
-    color: white;
+    color: #1a1a1f;
   }
 }
 
