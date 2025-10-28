@@ -10,6 +10,9 @@ export default function LoginPage({ onNavigate }) {
     setLoading(true)
     await new Promise((r) => setTimeout(r, 800))
     setLoading(false)
+    if (onNavigate) {
+      onNavigate('admin')
+    }
   }
 
   return (

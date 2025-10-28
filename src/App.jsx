@@ -6,6 +6,7 @@ import AboutPage from './pages/AboutPage'
 import ShopPage from './pages/ShopPage'
 import ContactPage from './pages/ContactPage'
 import ProductDetailPage from './pages/ProductDetailPage'
+import AdminPage from './pages/AdminPage'
 import LoginPage from './pages/LoginPage'
 import { sampleProducts } from './data/sampleProducts'
 import { MessageCircle } from 'lucide-react'
@@ -49,12 +50,15 @@ function App() {
 
   return (
     <div className="min-h-screen bg-white">
-      <Header currentPage={currentPage} onNavigate={handleNavigate} />
+      {currentPage !== 'admin' && (
+        <Header currentPage={currentPage} onNavigate={handleNavigate} />
+      )}
       
       {currentPage === 'home' && <LandingPage onNavigate={handleNavigate} />}
       {currentPage === 'about' && <AboutPage />}
       {currentPage === 'shop' && <ShopPage onNavigate={handleNavigate} />}
       {currentPage === 'contact' && <ContactPage />}
+      {currentPage === 'admin' && <AdminPage onNavigate={handleNavigate} />}
       {currentPage === 'login' && <LoginPage onNavigate={handleNavigate} />}
       {currentPage === 'product-detail' && (
         <ProductDetailPage
@@ -65,7 +69,7 @@ function App() {
         />
       )}
       
-      <Footer onNavigate={handleNavigate} />
+      {currentPage !== 'admin' && <Footer onNavigate={handleNavigate} />}
       
       <a
         href="https://wa.me/256758794396"
