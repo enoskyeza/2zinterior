@@ -6,6 +6,7 @@ import AboutPage from './pages/AboutPage'
 import ShopPage from './pages/ShopPage'
 import ContactPage from './pages/ContactPage'
 import ProductDetailPage from './pages/ProductDetailPage'
+import LoginPage from './pages/LoginPage'
 import { sampleProducts } from './data/sampleProducts'
 import { MessageCircle } from 'lucide-react'
 
@@ -54,6 +55,7 @@ function App() {
       {currentPage === 'about' && <AboutPage />}
       {currentPage === 'shop' && <ShopPage onNavigate={handleNavigate} />}
       {currentPage === 'contact' && <ContactPage />}
+      {currentPage === 'login' && <LoginPage onNavigate={handleNavigate} />}
       {currentPage === 'product-detail' && (
         <ProductDetailPage
           onNavigate={handleNavigate}

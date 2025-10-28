@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Menu, X } from 'lucide-react'
+import { Menu, X, User } from 'lucide-react'
 
 export default function Header({ currentPage, onNavigate }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -44,6 +44,17 @@ export default function Header({ currentPage, onNavigate }) {
               </button>
             ))}
             <button
+              onClick={() => handleNavClick('login')}
+              aria-label="Account"
+              className={`rounded-full p-2 transition-colors ${
+                currentPage === 'login'
+                  ? 'text-brand-primary bg-brand-primary/10'
+                  : 'text-brand-dark hover:text-brand-primary hover:bg-gray-100'
+              }`}
+            >
+              <User className="h-5 w-5" />
+            </button>
+            <button
               onClick={() => handleNavClick('contact')}
               className="bg-brand-primary text-white px-6 py-2 rounded-lg hover:bg-brand-accent transition-colors font-medium"
             >
@@ -77,6 +88,16 @@ export default function Header({ currentPage, onNavigate }) {
                 {item.name}
               </button>
             ))}
+            <button
+              onClick={() => handleNavClick('login')}
+              className={`block w-full text-left px-4 py-2 rounded-lg font-medium transition-colors ${
+                currentPage === 'login'
+                  ? 'bg-brand-primary/10 text-brand-primary'
+                  : 'text-brand-dark hover:bg-gray-100'
+              }`}
+            >
+              Login
+            </button>
             <button
               onClick={() => handleNavClick('contact')}
               className="block w-full text-left bg-brand-primary text-white px-4 py-2 rounded-lg hover:bg-brand-accent transition-colors font-medium"
