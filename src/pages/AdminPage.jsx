@@ -1,36 +1,79 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Toaster, toast } from 'sonner'
+import { useAuth } from '../hooks/useAuth.jsx'
+import { useAdminProducts } from '../hooks/useProducts.jsx'
 import Sidebar from '../admin/Sidebar'
 import MobileNav from '../admin/MobileNav'
 import ProductsTab from '../admin/ProductsTab'
 import OrdersTab from '../admin/OrdersTab'
 import SettingsTab from '../admin/SettingsTab'
-import { sampleProducts } from '../data/sampleProducts'
 
-export default function AdminPage({ onNavigate }) {
+export default function AdminPage() {
   const [activeTab, setActiveTab] = useState('products')
-  const [products, setProducts] = useState(sampleProducts)
-  const [user, setUser] = useState({ name: 'Admin User', email: 'admin@example.com' })
+  const { user, logout: authLogout } = useAuth()
+  const { 
+    products, 
+    loading, 
+    fetchProducts, 
+    createProduct, 
+    updateProduct, 
+    deleteProduct 
+  } = useAdminProducts()
+  const [pagination, setPagination] = useState(null)
 
-  const handleAddProduct = (productData) => {
-    const newProduct = { ...productData, id: Date.now().toString() }
-    setProducts([newProduct, ...products])
-    toast.success('Product added successfully')
+  const loadProducts = async (filters = {}) => {
+    const result = await fetchProducts(filters)
+    if (result.success && result.pagination) {
+      setPagination(result.pagination)
+    }
+    return result
   }
 
-  const handleUpdateProduct = (id, productData) => {
-    setProducts(products.map((p) => (p.id === id ? { ...productData, id } : p)))
-    toast.success('Product updated successfully')
+  const handleAddProduct = async (productData) => {
+    const result = await createProduct(productData)
+    
+    if (result.success) {
+      toast.success('Product added successfully')
+      // Refresh with default filters to show the new product
+      await loadProducts({ page: 1, per_page: 6 })
+    } else {
+      toast.error(result.message || 'Failed to add product')
+    }
+    
+    return result
   }
 
-  const handleDeleteProduct = (id) => {
-    setProducts(products.filter((p) => p.id !== id))
-    toast.success('Product deleted successfully')
+  const handleUpdateProduct = async (id, productData) => {
+    const result = await updateProduct(id, productData)
+    
+    if (result.success) {
+      toast.success('Product updated successfully')
+      // Refresh with default filters
+      await loadProducts({ page: 1, per_page: 6 })
+    } else {
+      toast.error(result.message || 'Failed to update product')
+    }
+    
+    return result
   }
 
-  const handleLogout = () => {
-    toast.success('Logged out')
-    if (onNavigate) onNavigate('login')
+  const handleDeleteProduct = async (id) => {
+    const result = await deleteProduct(id)
+    
+    if (result.success) {
+      toast.success('Product deleted successfully')
+      // Refresh with default filters
+      await loadProducts({ page: 1, per_page: 6 })
+    } else {
+      toast.error(result.message || 'Failed to delete product')
+    }
+    
+    return result
+  }
+
+  const handleLogout = async () => {
+    await authLogout()
+    toast.success('Logged out successfully')
   }
 
   return (
@@ -50,6 +93,9 @@ export default function AdminPage({ onNavigate }) {
           {activeTab === 'products' ? (
             <ProductsTab
               products={products}
+              loading={loading}
+              pagination={pagination}
+              onFetchProducts={loadProducts}
               onAddProduct={handleAddProduct}
               onUpdateProduct={handleUpdateProduct}
               onDeleteProduct={handleDeleteProduct}
@@ -57,7 +103,7 @@ export default function AdminPage({ onNavigate }) {
           ) : activeTab === 'orders' ? (
             <OrdersTab />
           ) : (
-            <SettingsTab user={user} onUpdateUser={setUser} onLogout={handleLogout} />
+            <SettingsTab user={user} onLogout={handleLogout} />
           )}
         </main>
       </div>

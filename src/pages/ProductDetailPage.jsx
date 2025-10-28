@@ -1,31 +1,66 @@
-import { useState } from 'react'
-import { ArrowLeft, Check, Package, Ruler, Star, Shield } from 'lucide-react'
+import { useState, useEffect } from 'react'
+import { useParams, useNavigate } from 'react-router-dom'
+import { useProduct, useProducts } from '../hooks/useProducts'
+import { ArrowLeft, Check, Package, Ruler, Star, Shield, Loader2 } from 'lucide-react'
 
-export default function ProductDetailPage({ onNavigate, onBack, product, relatedProducts }) {
+export default function ProductDetailPage() {
+  const { id: productId } = useParams()
+  const navigate = useNavigate()
   const [selectedImage, setSelectedImage] = useState(0)
 
-  if (!product) {
+  // Fetch product by ID
+  const { product, loading: productLoading, error: productError } = useProduct(productId)
+
+  // Fetch related products from the same category
+  const { products: relatedProducts } = useProducts({
+    category: product?.category,
+    per_page: 4,
+  })
+
+  // Filter out current product from related products
+  const filteredRelatedProducts = relatedProducts.filter(p => p.id !== productId)
+
+  // Reset selected image when product changes
+  useEffect(() => {
+    setSelectedImage(0)
+  }, [productId])
+
+  if (productLoading) {
+    return (
+      <div className="pt-20 min-h-screen flex items-center justify-center">
+        <Loader2 className="h-12 w-12 animate-spin text-brand-primary" />
+      </div>
+    )
+  }
+
+  if (productError || !product) {
     return (
       <div className="pt-20 min-h-screen flex items-center justify-center">
         <div className="text-center">
           <h2 className="text-2xl font-bold text-gray-900 mb-4">Product Not Found</h2>
+          <p className="text-gray-600 mb-8">
+            {productError || "The product you're looking for doesn't exist."}
+          </p>
           <button
-            onClick={() => onNavigate('home')}
-            className="text-brand-primary hover:text-brand-accent font-semibold"
+            onClick={() => navigate('/shop')}
+            className="bg-brand-primary text-white px-6 py-3 rounded-lg hover:bg-brand-accent transition-colors"
           >
-            Return to Home
+            Browse All Products
           </button>
         </div>
       </div>
     )
   }
 
+  // Handle product images
+  const productImages = product.images || (product.image_url ? [product.image_url] : [])
+
   return (
     <div className="pt-16 md:pt-20">
       <div className="bg-gray-50 py-4">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <button
-            onClick={() => (onBack ? onBack() : onNavigate('home'))}
+            onClick={() => navigate(-1)}
             className="flex items-center text-gray-600 hover:text-brand-primary transition-colors"
           >
             <ArrowLeft className="h-4 w-4 mr-2" />
@@ -40,13 +75,13 @@ export default function ProductDetailPage({ onNavigate, onBack, product, related
             <div>
               <div className="aspect-square bg-gray-100 rounded-xl overflow-hidden mb-4 shadow-lg">
                 <img
-                  src={product.images[selectedImage]}
+                  src={productImages[selectedImage]}
                   alt={product.name}
                   className="w-full h-full object-cover"
                 />
               </div>
               <div className="grid grid-cols-4 gap-4">
-                {product.images.map((image, index) => (
+                {productImages.map((image, index) => (
                   <button
                     key={index}
                     onClick={() => setSelectedImage(index)}
@@ -97,27 +132,29 @@ export default function ProductDetailPage({ onNavigate, onBack, product, related
                 </p>
               </div>
 
-              <div className="border-t border-gray-200 pt-6">
-                <h3 className="font-semibold text-lg text-brand-dark mb-4">Product Details</h3>
-                <div className="space-y-3">
-                  <div className="flex items-start">
-                    <Package className="h-5 w-5 text-brand-primary mr-3 mt-0.5 flex-shrink-0" />
-                    <div>
-                      <span className="font-medium text-brand-dark">Materials:</span>
-                      <span className="text-gray-600 ml-2">{product.materials}</span>
+              {product.materials && product.dimensions && (
+                <div className="border-t border-gray-200 pt-6">
+                  <h3 className="font-semibold text-lg text-brand-dark mb-4">Product Details</h3>
+                  <div className="space-y-3">
+                    <div className="flex items-start">
+                      <Package className="h-5 w-5 text-brand-primary mr-3 mt-0.5 shrink-0" />
+                      <div>
+                        <span className="font-medium text-brand-dark">Materials:</span>
+                        <span className="text-gray-600 ml-2">{product.materials}</span>
+                      </div>
                     </div>
-                  </div>
-                  <div className="flex items-start">
-                    <Ruler className="h-5 w-5 text-brand-primary mr-3 mt-0.5 flex-shrink-0" />
-                    <div>
-                      <span className="font-medium text-brand-dark">Dimensions:</span>
-                      <span className="text-gray-600 ml-2">
-                        W: {product.dimensions.width}cm × H: {product.dimensions.height}cm × D: {product.dimensions.depth}cm
-                      </span>
+                    <div className="flex items-start">
+                      <Ruler className="h-5 w-5 text-brand-primary mr-3 mt-0.5 shrink-0" />
+                      <div>
+                        <span className="font-medium text-brand-dark">Dimensions:</span>
+                        <span className="text-gray-600 ml-2">
+                          W: {product.dimensions.width}cm × H: {product.dimensions.height}cm × D: {product.dimensions.depth}cm
+                        </span>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
+              )}
 
               <div className="bg-brand-accent/10 border border-brand-accent/20 rounded-lg p-4">
                 <div className="flex items-center text-brand-dark mb-2">
@@ -131,13 +168,13 @@ export default function ProductDetailPage({ onNavigate, onBack, product, related
 
               <div className="space-y-3">
                 <button
-                  onClick={() => onNavigate('contact')}
+                  onClick={() => navigate('/contact')}
                   className="w-full bg-brand-primary text-white px-8 py-4 rounded-lg hover:bg-brand-accent transition-all hover:shadow-lg font-semibold text-lg"
                 >
                   Contact for Order
                 </button>
                 <button
-                  onClick={() => onNavigate('contact')}
+                  onClick={() => navigate('/contact')}
                   className="w-full bg-white text-brand-primary border-2 border-brand-primary px-8 py-4 rounded-lg hover:bg-brand-primary/5 transition-all font-semibold text-lg"
                 >
                   Request Custom Design
@@ -156,7 +193,7 @@ export default function ProductDetailPage({ onNavigate, onBack, product, related
                     'Expert craftsmanship guaranteed',
                   ].map((feature, index) => (
                     <li key={index} className="flex items-start text-gray-600">
-                      <Check className="h-5 w-5 text-brand-primary mr-3 mt-0.5 flex-shrink-0" />
+                      <Check className="h-5 w-5 text-brand-primary mr-3 mt-0.5 shrink-0" />
                       <span>{feature}</span>
                     </li>
                   ))}
@@ -167,25 +204,25 @@ export default function ProductDetailPage({ onNavigate, onBack, product, related
         </div>
       </section>
 
-      {relatedProducts.length > 0 && (
+      {filteredRelatedProducts.length > 0 && (
         <section className="py-16 bg-gray-50">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <h2 className="font-bold text-3xl md:text-4xl text-brand-dark mb-8">
               You May Also Like
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {relatedProducts.slice(0, 3).map((relatedProduct) => (
+              {filteredRelatedProducts.slice(0, 3).map((relatedProduct) => (
                 <button
                   key={relatedProduct.id}
                   onClick={() => {
-                    onNavigate('product-detail', relatedProduct.id)
+                    navigate(`/product/${relatedProduct.id}`)
                     window.scrollTo({ top: 0, behavior: 'smooth' })
                   }}
                   className="group bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 text-left"
                 >
-                  <div className="aspect-[4/3] bg-gray-200 overflow-hidden">
+                  <div className="aspect-4/3 bg-gray-200 overflow-hidden">
                     <img
-                      src={relatedProduct.images[0]}
+                      src={relatedProduct.image_url || relatedProduct.images?.[0]}
                       alt={relatedProduct.name}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                     />

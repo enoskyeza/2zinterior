@@ -1,4 +1,7 @@
-import { useState } from 'react'
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom'
+import { AuthProvider } from './hooks/useAuth.jsx'
+import ProtectedRoute from './components/ProtectedRoute'
+import GuestRoute from './components/GuestRoute'
 import Header from './components/Header'
 import Footer from './components/Footer'
 import LandingPage from './pages/LandingPage'
@@ -8,68 +11,43 @@ import ContactPage from './pages/ContactPage'
 import ProductDetailPage from './pages/ProductDetailPage'
 import AdminPage from './pages/AdminPage'
 import LoginPage from './pages/LoginPage'
-import { sampleProducts } from './data/sampleProducts'
 import { MessageCircle } from 'lucide-react'
 
-function App() {
-  const [currentPage, setCurrentPage] = useState('home')
-  const [selectedProductId, setSelectedProductId] = useState(null)
-  const [NAV_STACK, setNavStack] = useState([])
-
-  const handleNavigate = (page, productId) => {
-    setNavStack(prev => [...prev, { page: currentPage, productId: selectedProductId }])
-    setCurrentPage(page)
-    if (typeof productId !== 'undefined') {
-      setSelectedProductId(productId)
-    }
-    window.scrollTo({ top: 0, behavior: 'smooth' })
-  }
-
-  const handleBack = () => {
-    setNavStack(prev => {
-      if (prev.length === 0) {
-        setCurrentPage('home')
-        setSelectedProductId(null)
-        return prev
-      }
-      const last = prev[prev.length - 1]
-      setCurrentPage(last.page)
-      setSelectedProductId(last.productId || null)
-      return prev.slice(0, -1)
-    })
-    window.scrollTo({ top: 0, behavior: 'smooth' })
-  }
-
-  const selectedProduct = selectedProductId
-    ? sampleProducts.find(p => p.id === selectedProductId) || null
-    : null
-
-  const relatedProducts = selectedProduct
-    ? sampleProducts.filter(p => p.category === selectedProduct.category && p.id !== selectedProduct.id)
-    : []
+function AppContent() {
+  const location = useLocation()
+  const isAdminRoute = location.pathname.startsWith('/admin')
 
   return (
     <div className="min-h-screen bg-white">
-      {currentPage !== 'admin' && (
-        <Header currentPage={currentPage} onNavigate={handleNavigate} />
-      )}
+      {!isAdminRoute && <Header />}
       
-      {currentPage === 'home' && <LandingPage onNavigate={handleNavigate} />}
-      {currentPage === 'about' && <AboutPage />}
-      {currentPage === 'shop' && <ShopPage onNavigate={handleNavigate} />}
-      {currentPage === 'contact' && <ContactPage />}
-      {currentPage === 'admin' && <AdminPage onNavigate={handleNavigate} />}
-      {currentPage === 'login' && <LoginPage onNavigate={handleNavigate} />}
-      {currentPage === 'product-detail' && (
-        <ProductDetailPage
-          onNavigate={handleNavigate}
-          onBack={handleBack}
-          product={selectedProduct}
-          relatedProducts={relatedProducts}
+      <Routes>
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/about" element={<AboutPage />} />
+        <Route path="/shop" element={<ShopPage />} />
+        <Route path="/contact" element={<ContactPage />} />
+        <Route path="/product/:id" element={<ProductDetailPage />} />
+        
+        <Route 
+          path="/login" 
+          element={
+            <GuestRoute>
+              <LoginPage />
+            </GuestRoute>
+          } 
         />
-      )}
+        
+        <Route 
+          path="/admin" 
+          element={
+            <ProtectedRoute>
+              <AdminPage />
+            </ProtectedRoute>
+          } 
+        />
+      </Routes>
       
-      {currentPage !== 'admin' && <Footer onNavigate={handleNavigate} />}
+      {!isAdminRoute && <Footer />}
       
       <a
         href="https://wa.me/256758794396"
@@ -82,6 +60,16 @@ function App() {
         <span className="hidden sm:inline">WhatsApp</span>
       </a>
     </div>
+  )
+}
+
+function App() {
+  return (
+    <BrowserRouter>
+      <AuthProvider>
+        <AppContent />
+      </AuthProvider>
+    </BrowserRouter>
   )
 }
 

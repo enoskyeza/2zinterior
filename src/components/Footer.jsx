@@ -1,6 +1,7 @@
+import { Link } from 'react-router-dom'
 import { Mail, Phone, MapPin, Facebook, Instagram, Twitter } from 'lucide-react'
 
-export default function Footer({ onNavigate }) {
+export default function Footer() {
   return (
     <footer className="bg-brand-dark text-white" id="contact">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -49,19 +50,19 @@ export default function Footer({ onNavigate }) {
             <h4 className="font-semibold text-white text-lg">Quick Links</h4>
             <ul className="space-y-2 text-sm">
               <li>
-                <button onClick={() => onNavigate('shop')} className="text-white/80 hover:text-brand-accent transition-colors">
+                <Link to="/shop" className="text-white/80 hover:text-brand-accent transition-colors">
                   Our Products
-                </button>
+                </Link>
               </li>
               <li>
-                <button onClick={() => onNavigate('about')} className="text-white/80 hover:text-brand-accent transition-colors">
+                <Link to="/about" className="text-white/80 hover:text-brand-accent transition-colors">
                   About Us
-                </button>
+                </Link>
               </li>
               <li>
-                <button onClick={() => onNavigate('contact')} className="text-white/80 hover:text-brand-accent transition-colors">
+                <Link to="/contact" className="text-white/80 hover:text-brand-accent transition-colors">
                   Contact Us
-                </button>
+                </Link>
               </li>
             </ul>
           </div>
