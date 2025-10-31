@@ -1,15 +1,28 @@
-import { useState } from 'react'
-import { sampleProducts } from '../data/sampleProducts'
-import { ShoppingCart } from 'lucide-react'
+import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { useProducts } from '../hooks/useProducts'
+import { ShoppingCart, Loader2 } from 'lucide-react'
 
-export default function ShopPage({ onNavigate }) {
+export default function ShopPage() {
+  const navigate = useNavigate()
   const [selectedCategory, setSelectedCategory] = useState('All')
+  const [currentPage, setCurrentPage] = useState(1)
 
   const categories = ['All', 'Living Room', 'Dining Room', 'Bedroom', 'Office']
 
-  const filteredProducts = selectedCategory === 'All' 
-    ? sampleProducts 
-    : sampleProducts.filter(product => product.category === selectedCategory)
+  // Fetch products from backend
+  const filters = {
+    category: selectedCategory !== 'All' ? selectedCategory : undefined,
+    page: currentPage,
+    per_page: 9,
+  }
+
+  const { products, loading, error, pagination } = useProducts(filters)
+
+  // Reset to page 1 when category changes
+  useEffect(() => {
+    setCurrentPage(1)
+  }, [selectedCategory])
 
   const formatPrice = (price) => {
     return new Intl.NumberFormat('en-UG', {
@@ -59,63 +72,122 @@ export default function ShopPage({ onNavigate }) {
       {/* Products Grid */}
       <section className="py-16 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {filteredProducts.map((product) => (
-              <div 
-                key={product.id} 
-                className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-shadow"
-              >
-                <div className="relative h-64 overflow-hidden group">
-                  <img
-                    src={product.images[0]}
-                    alt={product.name}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                  />
-                  {product.featured && (
-                    <div className="absolute top-4 right-4 bg-brand-accent text-white px-3 py-1 rounded-full text-sm font-semibold">
-                      Featured
-                    </div>
-                  )}
-                </div>
-                <div className="p-6">
-                  <div className="text-sm text-brand-primary font-medium mb-2">
-                    {product.category}
-                  </div>
-                  <button
-                    onClick={() => onNavigate('product-detail', product.id)}
-                    className="font-bold text-xl text-brand-dark mb-2 hover:text-brand-primary transition-colors text-left w-full"
-                  >
-                    {product.name}
-                  </button>
-                  <p className="text-gray-600 text-sm mb-4 line-clamp-2">
-                    {product.description}
-                  </p>
-                  <div className="flex items-center justify-between">
-                    <div className="text-2xl font-bold text-brand-dark">
-                      {formatPrice(product.price)}
-                    </div>
-                    <button
-                      onClick={() => onNavigate('contact')}
-                      className="bg-brand-primary text-white px-4 py-2 rounded-lg hover:bg-brand-accent transition-colors font-medium flex items-center gap-2"
-                    >
-                      <ShoppingCart className="h-4 w-4" />
-                      Order
-                    </button>
-                  </div>
-                  <div className="mt-4 pt-4 border-t border-gray-200">
-                    <p className="text-xs text-gray-500">
-                      <span className="font-medium">Dimensions:</span> {product.dimensions.width}cm x {product.dimensions.depth}cm x {product.dimensions.height}cm
-                    </p>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {filteredProducts.length === 0 && (
-            <div className="text-center py-16">
-              <p className="text-gray-500 text-lg">No products found in this category.</p>
+          {/* Loading State */}
+          {loading && (
+            <div className="flex justify-center items-center py-20">
+              <Loader2 className="h-12 w-12 animate-spin text-brand-primary" />
             </div>
+          )}
+
+          {/* Error State */}
+          {error && (
+            <div className="bg-red-50 border border-red-200 text-red-700 px-6 py-4 rounded-lg mb-8">
+              <p className="font-medium">{error}</p>
+            </div>
+          )}
+
+          {/* Products Grid */}
+          {!loading && !error && (
+            <>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {products.map((product) => (
+                  <div 
+                    key={product.id} 
+                    className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-shadow"
+                  >
+                    <div className="relative h-64 overflow-hidden group">
+                      <img
+                        src={product.image_url || product.images?.[0]}
+                        alt={product.name}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      />
+                      {product.is_featured && (
+                        <div className="absolute top-4 right-4 bg-brand-accent text-white px-3 py-1 rounded-full text-sm font-semibold">
+                          Featured
+                        </div>
+                      )}
+                    </div>
+                    <div className="p-6">
+                      <div className="text-sm text-brand-primary font-medium mb-2">
+                        {product.category}
+                      </div>
+                      <button
+                        onClick={() => navigate(`/product/${product.id}`)}
+                        className="font-bold text-xl text-brand-dark mb-2 hover:text-brand-primary transition-colors text-left w-full"
+                      >
+                        {product.name}
+                      </button>
+                      <p className="text-gray-600 text-sm mb-4 line-clamp-2">
+                        {product.description}
+                      </p>
+                      <div className="flex items-center justify-between">
+                        <div className="text-2xl font-bold text-brand-dark">
+                          {formatPrice(product.price)}
+                        </div>
+                        <button
+                          onClick={() => navigate('/contact')}
+                          className="bg-brand-primary text-white px-4 py-2 rounded-lg hover:bg-brand-accent transition-colors font-medium flex items-center gap-2"
+                        >
+                          <ShoppingCart className="h-4 w-4" />
+                          Order
+                        </button>
+                      </div>
+                      {product.dimensions && (
+                        <div className="mt-4 pt-4 border-t border-gray-200">
+                          <p className="text-xs text-gray-500">
+                            <span className="font-medium">Dimensions:</span> {product.dimensions.width}cm x {product.dimensions.depth}cm x {product.dimensions.height}cm
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Empty State */}
+              {products.length === 0 && (
+                <div className="text-center py-16">
+                  <p className="text-gray-500 text-lg">No products found in this category.</p>
+                </div>
+              )}
+
+              {/* Pagination */}
+              {pagination && pagination.last_page > 1 && (
+                <div className="mt-12 flex justify-center items-center gap-2">
+                  <button
+                    onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                    disabled={currentPage === 1}
+                    className="px-4 py-2 rounded-lg border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed font-medium"
+                  >
+                    Previous
+                  </button>
+
+                  <div className="flex gap-2">
+                    {Array.from({ length: pagination.last_page }, (_, i) => i + 1).map((page) => (
+                      <button
+                        key={page}
+                        onClick={() => setCurrentPage(page)}
+                        className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+                          currentPage === page
+                            ? 'bg-brand-primary text-white'
+                            : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50'
+                        }`}
+                      >
+                        {page}
+                      </button>
+                    ))}
+                  </div>
+
+                  <button
+                    onClick={() => setCurrentPage(prev => Math.min(pagination.last_page, prev + 1))}
+                    disabled={currentPage === pagination.last_page}
+                    className="px-4 py-2 rounded-lg border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed font-medium"
+                  >
+                    Next
+                  </button>
+                </div>
+              )}
+            </>
           )}
         </div>
       </section>
@@ -131,7 +203,7 @@ export default function ShopPage({ onNavigate }) {
             Let's bring your vision to life.
           </p>
           <button
-            onClick={() => onNavigate('contact')}
+            onClick={() => navigate('/contact')}
             className="inline-block bg-brand-accent text-white px-8 py-4 rounded-lg hover:bg-brand-primary transition-colors font-semibold text-lg"
           >
             Contact Us for Custom Orders

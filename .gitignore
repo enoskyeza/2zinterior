@@ -25,3 +25,4 @@ dist-ssr
 
 # Project documentation artifacts
 task_docs/
+.env

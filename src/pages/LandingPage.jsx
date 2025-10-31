@@ -4,14 +4,14 @@ import ProductsSection from '../components/ProductsSection'
 import TraditionSection from '../components/TraditionSection'
 import CTASection from '../components/CTASection'
 
-export default function LandingPage({ onNavigate }) {
+export default function LandingPage() {
   return (
     <div className="pt-16 md:pt-20">
-      <HeroSection onNavigate={onNavigate} />
+      <HeroSection />
       <FeaturesSection />
-      <ProductsSection onNavigate={onNavigate} />
+      <ProductsSection />
       <TraditionSection />
-      <CTASection onNavigate={onNavigate} />
+      <CTASection />
     </div>
   )
 }

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { X } from 'lucide-react'
+import { X, AlertCircle } from 'lucide-react'
 import ImageUpload from './ImageUpload'
 
 const categories = ['Living Room', 'Dining Room', 'Bedroom', 'Office']
@@ -16,7 +16,11 @@ export default function ProductForm({ isOpen, onClose, onSubmit, editProduct }) 
     height: '',
     depth: '',
     featured: false,
+    status: 'active',
   })
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
+  const [fieldErrors, setFieldErrors] = useState({})
 
   useEffect(() => {
     if (editProduct) {
@@ -25,12 +29,13 @@ export default function ProductForm({ isOpen, onClose, onSubmit, editProduct }) 
         description: editProduct.description,
         price: editProduct.price.toString(),
         category: editProduct.category,
-        images: editProduct.images,
-        materials: editProduct.materials,
-        width: editProduct.dimensions.width.toString(),
-        height: editProduct.dimensions.height.toString(),
-        depth: editProduct.dimensions.depth.toString(),
-        featured: editProduct.featured,
+        images: editProduct.images || [],
+        materials: editProduct.materials || '',
+        width: editProduct.dimensions?.width?.toString() || '',
+        height: editProduct.dimensions?.height?.toString() || '',
+        depth: editProduct.dimensions?.depth?.toString() || '',
+        featured: editProduct.featured || false,
+        status: editProduct.status || 'active',
       })
     } else {
       setFormData({
@@ -44,13 +49,22 @@ export default function ProductForm({ isOpen, onClose, onSubmit, editProduct }) 
         height: '',
         depth: '',
         featured: false,
+        status: 'active',
       })
     }
+    // Reset errors when form opens/closes or product changes
+    setError('')
+    setFieldErrors({})
   }, [editProduct, isOpen])
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    onSubmit({
+    setLoading(true)
+    setError('')
+    setFieldErrors({})
+
+    // Prepare product data
+    const productData = {
       name: formData.name,
       description: formData.description,
       price: parseFloat(formData.price),
@@ -63,7 +77,24 @@ export default function ProductForm({ isOpen, onClose, onSubmit, editProduct }) 
         depth: parseFloat(formData.depth),
       },
       featured: formData.featured,
-    })
+      status: formData.status,
+    }
+
+    // Call the onSubmit prop passed from parent
+    const result = await onSubmit(productData)
+
+    setLoading(false)
+
+    if (result?.success) {
+      // Close form on success
+      onClose()
+    } else {
+      // Handle errors
+      setError(result?.message || 'Failed to save product. Please try again.')
+      if (result?.errors) {
+        setFieldErrors(result.errors)
+      }
+    }
   }
 
   if (!isOpen) return null
@@ -78,64 +109,195 @@ export default function ProductForm({ isOpen, onClose, onSubmit, editProduct }) 
           </button>
         </div>
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
+          {error && (
+            <div className="bg-red-50 border border-red-200 rounded-lg p-4 flex items-start gap-3">
+              <AlertCircle className="h-5 w-5 text-red-600 shrink-0 mt-0.5" />
+              <p className="text-sm text-red-800">{error}</p>
+            </div>
+          )}
+
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Product Name</label>
-            <input type="text" required value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500" />
+            <input 
+              type="text" 
+              required 
+              value={formData.name} 
+              onChange={(e) => setFormData({ ...formData, name: e.target.value })} 
+              className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 ${
+                fieldErrors.name ? 'border-red-300' : 'border-gray-300'
+              }`}
+            />
+            {fieldErrors.name && (
+              <p className="mt-1 text-sm text-red-600">{fieldErrors.name[0]}</p>
+            )}
           </div>
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
-            <textarea rows={4} required value={formData.description} onChange={(e) => setFormData({ ...formData, description: e.target.value })} className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500" />
+            <textarea 
+              rows={4} 
+              required 
+              value={formData.description} 
+              onChange={(e) => setFormData({ ...formData, description: e.target.value })} 
+              className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 ${
+                fieldErrors.description ? 'border-red-300' : 'border-gray-300'
+              }`}
+            />
+            {fieldErrors.description && (
+              <p className="mt-1 text-sm text-red-600">{fieldErrors.description[0]}</p>
+            )}
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Price (UGX)</label>
-              <input type="number" required value={formData.price} onChange={(e) => setFormData({ ...formData, price: e.target.value })} className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500" />
+              <input 
+                type="number" 
+                required 
+                min="0"
+                step="0.01"
+                value={formData.price} 
+                onChange={(e) => setFormData({ ...formData, price: e.target.value })} 
+                className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 ${
+                  fieldErrors.price ? 'border-red-300' : 'border-gray-300'
+                }`}
+              />
+              {fieldErrors.price && (
+                <p className="mt-1 text-sm text-red-600">{fieldErrors.price[0]}</p>
+              )}
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
-              <select value={formData.category} onChange={(e) => setFormData({ ...formData, category: e.target.value })} className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500">
+              <select 
+                value={formData.category} 
+                onChange={(e) => setFormData({ ...formData, category: e.target.value })} 
+                className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 ${
+                  fieldErrors.category ? 'border-red-300' : 'border-gray-300'
+                }`}
+              >
                 {categories.map((cat) => (
                   <option key={cat} value={cat}>{cat}</option>
                 ))}
               </select>
+              {fieldErrors.category && (
+                <p className="mt-1 text-sm text-red-600">{fieldErrors.category[0]}</p>
+              )}
             </div>
           </div>
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Materials</label>
-            <input type="text" required value={formData.materials} onChange={(e) => setFormData({ ...formData, materials: e.target.value })} className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500" />
+            <input 
+              type="text" 
+              required 
+              value={formData.materials} 
+              onChange={(e) => setFormData({ ...formData, materials: e.target.value })} 
+              className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 ${
+                fieldErrors.materials ? 'border-red-300' : 'border-gray-300'
+              }`}
+              placeholder="e.g., Mahogany wood, leather"
+            />
+            {fieldErrors.materials && (
+              <p className="mt-1 text-sm text-red-600">{fieldErrors.materials[0]}</p>
+            )}
           </div>
 
           <div className="grid grid-cols-3 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Width (cm)</label>
-              <input type="number" required value={formData.width} onChange={(e) => setFormData({ ...formData, width: e.target.value })} className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500" />
+              <input 
+                type="number" 
+                required 
+                min="0"
+                step="0.1"
+                value={formData.width} 
+                onChange={(e) => setFormData({ ...formData, width: e.target.value })} 
+                className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 ${
+                  fieldErrors['dimensions.width'] ? 'border-red-300' : 'border-gray-300'
+                }`}
+              />
+              {fieldErrors['dimensions.width'] && (
+                <p className="mt-1 text-sm text-red-600">{fieldErrors['dimensions.width'][0]}</p>
+              )}
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Height (cm)</label>
-              <input type="number" required value={formData.height} onChange={(e) => setFormData({ ...formData, height: e.target.value })} className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500" />
+              <input 
+                type="number" 
+                required 
+                min="0"
+                step="0.1"
+                value={formData.height} 
+                onChange={(e) => setFormData({ ...formData, height: e.target.value })} 
+                className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 ${
+                  fieldErrors['dimensions.height'] ? 'border-red-300' : 'border-gray-300'
+                }`}
+              />
+              {fieldErrors['dimensions.height'] && (
+                <p className="mt-1 text-sm text-red-600">{fieldErrors['dimensions.height'][0]}</p>
+              )}
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Depth (cm)</label>
-              <input type="number" required value={formData.depth} onChange={(e) => setFormData({ ...formData, depth: e.target.value })} className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500" />
+              <input 
+                type="number" 
+                required 
+                min="0"
+                step="0.1"
+                value={formData.depth} 
+                onChange={(e) => setFormData({ ...formData, depth: e.target.value })} 
+                className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 ${
+                  fieldErrors['dimensions.depth'] ? 'border-red-300' : 'border-gray-300'
+                }`}
+              />
+              {fieldErrors['dimensions.depth'] && (
+                <p className="mt-1 text-sm text-red-600">{fieldErrors['dimensions.depth'][0]}</p>
+              )}
             </div>
           </div>
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">Product Images</label>
-            <ImageUpload images={formData.images} onChange={(images) => setFormData({ ...formData, images })} maxImages={5} maxSizeMB={4} />
+            <ImageUpload 
+              images={formData.images} 
+              onChange={(images) => setFormData({ ...formData, images })} 
+              maxImages={5} 
+              maxSizeMB={4} 
+            />
+            {fieldErrors.images && (
+              <p className="mt-1 text-sm text-red-600">{fieldErrors.images[0]}</p>
+            )}
           </div>
 
           <div className="flex items-center">
-            <input type="checkbox" id="featured" checked={formData.featured} onChange={(e) => setFormData({ ...formData, featured: e.target.checked })} className="w-4 h-4 text-red-600 border-gray-300 rounded focus:ring-red-500" />
-            <label htmlFor="featured" className="ml-2 text-sm font-medium text-gray-700">Featured Product</label>
+            <input 
+              type="checkbox" 
+              id="featured" 
+              checked={formData.featured} 
+              onChange={(e) => setFormData({ ...formData, featured: e.target.checked })} 
+              className="w-4 h-4 text-red-600 border-gray-300 rounded focus:ring-red-500" 
+            />
+            <label htmlFor="featured" className="ml-2 text-sm font-medium text-gray-700">
+              Featured Product
+            </label>
           </div>
 
           <div className="flex justify-end space-x-3 pt-4">
-            <button type="button" onClick={onClose} className="px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors">Cancel</button>
-            <button type="submit" className="px-4 py-2 text-white bg-red-600 rounded-lg hover:bg-red-700 transition-colors">{editProduct ? 'Update Product' : 'Add Product'}</button>
+            <button 
+              type="button" 
+              onClick={onClose} 
+              disabled={loading}
+              className="px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              Cancel
+            </button>
+            <button 
+              type="submit" 
+              disabled={loading}
+              className="px-4 py-2 text-white bg-red-600 rounded-lg hover:bg-red-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {loading ? 'Saving...' : editProduct ? 'Update Product' : 'Add Product'}
+            </button>
           </div>
         </form>
       </div>

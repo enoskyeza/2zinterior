@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { ArrowRight } from 'lucide-react'
 
-export default function HeroSection({ onNavigate }) {
+export default function HeroSection() {
+  const navigate = useNavigate()
   const slides = [
     "https://images.pexels.com/photos/1350789/pexels-photo-1350789.jpeg?auto=compress&cs=tinysrgb&w=1920",
     "https://images.unsplash.com/photo-1505691938895-1758d7feb511?auto=format&fit=crop&w=1740&q=80",
@@ -44,14 +46,14 @@ export default function HeroSection({ onNavigate }) {
           </p>
           <div className="flex flex-col sm:flex-row gap-4">
             <button
-              onClick={() => onNavigate('shop')}
+              onClick={() => navigate('/shop')}
               className="bg-primary-700 text-white px-8 py-4 rounded-lg hover:bg-primary-800 transition-all hover:shadow-lg font-semibold text-lg flex items-center justify-center group"
             >
               Explore Collection
               <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
             </button>
             <button
-              onClick={() => onNavigate('contact')}
+              onClick={() => navigate('/contact')}
               className="bg-white text-primary-700 border-2 border-primary-700 px-8 py-4 rounded-lg hover:bg-primary-50 transition-all font-semibold text-lg text-center"
             >
               Custom Orders
