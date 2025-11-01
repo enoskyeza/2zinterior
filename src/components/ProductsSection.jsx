@@ -37,11 +37,11 @@ export default function ProductsSection() {
 
         {!loading && !error && featuredProducts.length > 0 && (
           <>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-8">
               {featuredProducts.map((product) => (
                 <div
                   key={product.id}
-                  className="group bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300"
+                  className="group bg-white rounded-none overflow-hidden shadow-md hover:shadow-xl transition-all duration-300"
                 >
                   <div className="aspect-4/3 bg-gray-200 overflow-hidden">
                     <img
@@ -61,9 +61,12 @@ export default function ProductsSection() {
                         ))}
                       </div>
                     </div>
-                    <h3 className="font-display text-xl font-semibold text-gray-900 mb-2 group-hover:text-primary-700 transition-colors">
+                    <button
+                      onClick={() => navigate(`/product/${product.id}`)}
+                      className="font-display text-xl font-semibold text-gray-900 mb-2 group-hover:text-primary-700 transition-colors text-left cursor-pointer md:line-clamp-1"
+                    >
                       {product.name}
-                    </h3>
+                    </button>
                     <p className="text-gray-600 text-sm mb-4 line-clamp-2">
                       {product.description}
                     </p>
@@ -71,12 +74,12 @@ export default function ProductsSection() {
                       <span className="text-2xl font-bold text-primary-700">
                         UGX {product.price.toLocaleString()}
                       </span>
-                      <button
+                      {/* <button
                         onClick={() => navigate(`/product/${product.id}`)}
                         className="text-primary-700 group-hover:translate-x-1 transition-transform flex items-center hover:text-primary-800"
                       >
                         View Details <ArrowRight className="ml-1 h-4 w-4" />
-                      </button>
+                      </button> */}
                     </div>
                   </div>
                 </div>

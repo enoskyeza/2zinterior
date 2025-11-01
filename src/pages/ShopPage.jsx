@@ -35,8 +35,8 @@ export default function ShopPage() {
   return (
     <div className="pt-16 md:pt-20">
       {/* Hero Section */}
-      <section className="relative bg-brand-hero bg-cover bg-center bg-fixed">
-        <div className="absolute inset-0 bg-black/40" aria-hidden="true" />
+      <section className="relative bg-brand-hero bg-cover bg-bottom bg-fixed">
+        <div className="absolute inset-0 bg-black/20" aria-hidden="true" />
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center py-20 md:py-28">
           <h1 className="font-bold text-5xl md:text-6xl text-white mb-4">
             Our Shop
@@ -89,11 +89,11 @@ export default function ShopPage() {
           {/* Products Grid */}
           {!loading && !error && (
             <>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-8">
                 {products.map((product) => (
                   <div 
                     key={product.id} 
-                    className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-shadow"
+                    className="bg-white rounded-none shadow-md overflow-hidden hover:shadow-xl transition-shadow"
                   >
                     <div className="relative h-64 overflow-hidden group">
                       <img
@@ -113,7 +113,7 @@ export default function ShopPage() {
                       </div>
                       <button
                         onClick={() => navigate(`/product/${product.id}`)}
-                        className="font-bold text-xl text-brand-dark mb-2 hover:text-brand-primary transition-colors text-left w-full"
+                        className="font-bold text-xl text-brand-dark mb-2 hover:text-brand-primary transition-colors text-left w-full cursor-pointer line-clamp-1"
                       >
                         {product.name}
                       </button>
@@ -121,16 +121,16 @@ export default function ShopPage() {
                         {product.description}
                       </p>
                       <div className="flex items-center justify-between">
-                        <div className="text-2xl font-bold text-brand-dark">
+                        <div className="text-2xl font-bold text-brand-primary">
                           {formatPrice(product.price)}
                         </div>
-                        <button
+                        {/* <button
                           onClick={() => navigate('/contact')}
                           className="bg-brand-primary text-white px-4 py-2 rounded-lg hover:bg-brand-accent transition-colors font-medium flex items-center gap-2"
                         >
                           <ShoppingCart className="h-4 w-4" />
                           Order
-                        </button>
+                        </button> */}
                       </div>
                       {product.dimensions && (
                         <div className="mt-4 pt-4 border-t border-gray-200">
