@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom'
+
 export default function TraditionSection() {
   return (
     <section className="py-20 bg-white">
@@ -13,12 +15,12 @@ export default function TraditionSection() {
             <p className="text-lg text-gray-600 mb-8 leading-relaxed">
               Every piece is crafted from sustainably sourced materials, including premium Ugandan hardwoods like Mahogany and Mvule. We take pride in supporting local communities and preserving traditional woodworking skills.
             </p>
-            <a
-              href="#contact"
+            <Link
+              to="/about"
               className="bg-primary-700 text-white px-8 py-3 rounded-lg hover:bg-primary-800 transition-all font-semibold inline-block"
             >
               Learn More About Us
-            </a>
+            </Link>
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div className="aspect-square bg-gray-200 rounded-xl overflow-hidden">
