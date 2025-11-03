@@ -93,7 +93,7 @@ export default function Footer() {
                 href="https://thinktankgs.com/"
                 target="_blank"
                 rel="noreferrer"
-                className="text-brand-accent hover:underline"
+                className="text-yellow-500 hover:underline"
               >
                 Think Tank Global Solutions
               </a>
