@@ -36,7 +36,10 @@ export default function ShopPage() {
     <div className="pt-16 md:pt-20">
       {/* Hero Section */}
       <section className="relative bg-brand-hero bg-cover bg-bottom bg-fixed">
-        <div className="absolute inset-0 bg-black/20" aria-hidden="true" />
+        <div
+          className="absolute inset-0 bg-gradient-to-br from-black/70 via-black/50 to-black/30 mix-blend-multiply"
+          aria-hidden="true"
+        />
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center py-20 md:py-28">
           <h1 className="font-bold text-5xl md:text-6xl text-white mb-4">
             Our Shop

@@ -1,10 +1,13 @@
 import { Package, ShoppingCart, Settings, LogOut } from 'lucide-react'
+import { Link } from 'react-router-dom'
 
 export default function Sidebar({ activeTab, onTabChange, onLogout }) {
   return (
     <aside className="hidden lg:flex lg:flex-col w-64 bg-white border-r border-gray-200 fixed left-0 top-0 h-full">
       <div className="p-6 border-b border-gray-200">
-        <img src="/logo-dark.png" alt="2Z Interiors" className="h-8 w-auto" />
+        <Link to="/">
+          <img src="/logo-dark.png" alt="2Z Interiors" className="h-8 w-auto transition-transform hover:scale-105" />
+        </Link>
       </div>
       <nav className="flex-1 p-4">
         <button

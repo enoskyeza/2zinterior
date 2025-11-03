@@ -28,7 +28,7 @@ export default function HeroSection() {
           className={`absolute inset-0 transition-opacity duration-700 ${idx === current ? 'opacity-100' : 'opacity-0'}`}
         >
           <div
-            className="absolute inset-0 bg-cover bg-center opacity-10"
+            className="absolute inset-0 bg-cover bg-center opacity-35"
             style={{ backgroundImage: `url('${src}')` }}
             aria-hidden="true"
           />

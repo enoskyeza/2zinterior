@@ -57,24 +57,59 @@ export default function ProductForm({ isOpen, onClose, onSubmit, editProduct }) 
     setFieldErrors({})
   }, [editProduct, isOpen])
 
+  const safeParseFloat = (value) => {
+    if (value === '' || value === null || value === undefined) return null
+    const parsed = parseFloat(value)
+    return Number.isNaN(parsed) ? null : parsed
+  }
+
   const handleSubmit = async (e) => {
     e.preventDefault()
-    setLoading(true)
     setError('')
     setFieldErrors({})
 
-    // Prepare product data
+    const validationErrors = {}
+
+    if (!formData.name.trim()) {
+      validationErrors.name = ['Product name is required.']
+    }
+
+    if (!formData.description.trim()) {
+      validationErrors.description = ['Description is required.']
+    }
+
+    const priceValue = parseFloat(formData.price)
+    if (Number.isNaN(priceValue) || priceValue <= 0) {
+      validationErrors.price = ['Please enter a valid price.']
+    }
+
+    if (!formData.category) {
+      validationErrors.category = ['Category is required.']
+    }
+
+    if (formData.images.length === 0) {
+      validationErrors.images = ['Please upload at least one product image.']
+    }
+
+    if (Object.keys(validationErrors).length > 0) {
+      setFieldErrors(validationErrors)
+      setError('Please correct the highlighted fields.')
+      return
+    }
+
+    setLoading(true)
+
     const productData = {
-      name: formData.name,
-      description: formData.description,
-      price: parseFloat(formData.price),
+      name: formData.name.trim(),
+      description: formData.description.trim(),
+      price: priceValue,
       category: formData.category,
       images: formData.images,
-      materials: formData.materials,
+      materials: formData.materials.trim() || null,
       dimensions: {
-        width: parseFloat(formData.width),
-        height: parseFloat(formData.height),
-        depth: parseFloat(formData.depth),
+        width: safeParseFloat(formData.width),
+        height: safeParseFloat(formData.height),
+        depth: safeParseFloat(formData.depth),
       },
       featured: formData.featured,
       status: formData.status,
@@ -117,7 +152,9 @@ export default function ProductForm({ isOpen, onClose, onSubmit, editProduct }) 
           )}
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Product Name</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Product Name <span className="text-red-500">*</span>
+            </label>
             <input 
               type="text" 
               required 
@@ -133,7 +170,9 @@ export default function ProductForm({ isOpen, onClose, onSubmit, editProduct }) 
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Description <span className="text-red-500">*</span>
+            </label>
             <textarea 
               rows={4} 
               required 
@@ -150,7 +189,9 @@ export default function ProductForm({ isOpen, onClose, onSubmit, editProduct }) 
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Price (UGX)</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Price (UGX) <span className="text-red-500">*</span>
+              </label>
               <input 
                 type="number" 
                 required 
@@ -167,9 +208,12 @@ export default function ProductForm({ isOpen, onClose, onSubmit, editProduct }) 
               )}
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Category <span className="text-red-500">*</span>
+              </label>
               <select 
                 value={formData.category} 
+                required
                 onChange={(e) => setFormData({ ...formData, category: e.target.value })} 
                 className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 ${
                   fieldErrors.category ? 'border-red-300' : 'border-gray-300'
@@ -186,10 +230,11 @@ export default function ProductForm({ isOpen, onClose, onSubmit, editProduct }) 
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Materials</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Materials <span className="text-xs text-gray-500">(Optional)</span>
+            </label>
             <input 
               type="text" 
-              required 
               value={formData.materials} 
               onChange={(e) => setFormData({ ...formData, materials: e.target.value })} 
               className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 ${
@@ -204,10 +249,11 @@ export default function ProductForm({ isOpen, onClose, onSubmit, editProduct }) 
 
           <div className="grid grid-cols-3 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Width (cm)</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Width (cm) <span className="text-xs text-gray-500">(Optional)</span>
+              </label>
               <input 
                 type="number" 
-                required 
                 min="0"
                 step="0.1"
                 value={formData.width} 
@@ -221,10 +267,11 @@ export default function ProductForm({ isOpen, onClose, onSubmit, editProduct }) 
               )}
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Height (cm)</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Height (cm) <span className="text-xs text-gray-500">(Optional)</span>
+              </label>
               <input 
                 type="number" 
-                required 
                 min="0"
                 step="0.1"
                 value={formData.height} 
@@ -238,10 +285,11 @@ export default function ProductForm({ isOpen, onClose, onSubmit, editProduct }) 
               )}
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Depth (cm)</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Depth (cm) <span className="text-xs text-gray-500">(Optional)</span>
+              </label>
               <input 
                 type="number" 
-                required 
                 min="0"
                 step="0.1"
                 value={formData.depth} 
@@ -257,7 +305,9 @@ export default function ProductForm({ isOpen, onClose, onSubmit, editProduct }) 
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Product Images</label>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Product Images <span className="text-red-500">*</span>
+            </label>
             <ImageUpload 
               images={formData.images} 
               onChange={(images) => setFormData({ ...formData, images })} 
