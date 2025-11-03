@@ -85,7 +85,20 @@ export default function Footer() {
         </div>
 
         <div className="border-t border-white/20 mt-8 pt-8 text-center text-sm">
-          <p>&copy; {new Date().getFullYear()} 2Z City Interiors. All rights reserved. Handcrafted in Uganda.</p>
+          <p>
+            &copy; {new Date().getFullYear()} 2Z City Interiors. All rights reserved.{' '}
+            <span className="text-white/80">
+              Designed by{' '}
+              <a
+                href="https://thinktankgs.com/"
+                target="_blank"
+                rel="noreferrer"
+                className="text-brand-accent hover:underline"
+              >
+                Think Tank Global Solutions
+              </a>
+            </span>
+          </p>
         </div>
       </div>
     </footer>
