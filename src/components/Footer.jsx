@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { Mail, Phone, MapPin, Facebook, Instagram, Twitter } from 'lucide-react'
+import { Mail, Phone, MapPin, Facebook, Instagram, Twitter, Play } from 'lucide-react'
 
 export default function Footer() {
   return (
@@ -64,6 +64,11 @@ export default function Footer() {
                   Contact Us
                 </Link>
               </li>
+              <li>
+                <a href="https://www.2zcityfurniture.com" target="_blank" rel="noreferrer" className="text-white/80 hover:text-brand-accent transition-colors">
+                  Old Website
+                </a>
+              </li>
             </ul>
           </div>
 
@@ -79,6 +84,9 @@ export default function Footer() {
               </a>
               <a href="https://www.linkedin.com/company/2zinteriors" target="_blank" rel="noreferrer" className="bg-white/10 p-2 rounded-lg hover:bg-brand-accent transition-colors">
                 <Twitter className="h-5 w-5" />
+              </a>
+              <a href="https://www.tiktok.com/@2z.city.furniture?_r=1&_t=ZS-91BMM5ryNxV" target="_blank" rel="noreferrer" className="bg-white/10 p-2 rounded-lg hover:bg-brand-accent transition-colors">
+                <Play className="h-5 w-5" />
               </a>
             </div>
           </div>
