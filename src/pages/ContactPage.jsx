@@ -246,12 +246,13 @@ export default function ContactPage() {
 
               <div className="aspect-video bg-gray-200 rounded-xl overflow-hidden shadow-lg">
                 <iframe
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3989.756739393937!2d32.582520314772545!3d0.3475964997626693!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x177dbc0f38a6d847%3A0x9c8e5d7f1e0e8e8e!2sKampala%20Road%2C%20Kampala%2C%20Uganda!5e0!3m2!1sen!2s!4v1620000000000!5m2!1sen!2s"
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3989.697010379051!2d32.609234875865454!3d0.44679716381101253!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x177db3001362591b%3A0x7e1ecf16b0e9552e!2s2Z%20city%20furniture%20ug%20Ltd!5e0!3m2!1sen!2sug!4v1763013643278!5m2!1sen!2sug"
                   width="100%"
                   height="100%"
                   style={{ border: 0 }}
                   allowFullScreen
                   loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
                   title="2zinteriors Location"
                 />
               </div>

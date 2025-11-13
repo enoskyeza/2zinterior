@@ -20,6 +20,13 @@ export default function CTASection() {
           Contact Us Now
           <ArrowRight className="ml-2 h-5 w-5" />
         </button>
+        <a
+          href="https://www.2zcityfurniture.com" target="_blank"
+          className="ms-4 bg-blue-700 text-white px-8 py-4 rounded-lg hover:bg-blue-600 transition-all font-semibold text-lg inline-flex items-center"
+        >
+          Check out our other products
+          <ArrowRight className="ml-2 h-5 w-5" />
+        </a>
       </div>
     </section>
   )
