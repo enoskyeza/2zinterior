@@ -64,11 +64,6 @@ export default function Footer() {
                   Contact Us
                 </Link>
               </li>
-              <li>
-                <a href="https://www.2zcityfurniture.com" target="_blank" rel="noreferrer" className="text-white/80 hover:text-brand-accent transition-colors">
-                  Old Website
-                </a>
-              </li>
             </ul>
           </div>
 
