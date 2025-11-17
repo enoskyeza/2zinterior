@@ -77,8 +77,7 @@ export default function ContactPage() {
               <h3 className="font-semibold text-lg text-brand-dark mb-2">Locations</h3>
               <p className="text-gray-600 mb-2">Visit our showrooms</p>
               <p className="text-brand-dark font-medium text-sm">
-                Gayaza Town, Wakiso<br />
-                Maganjo Bombo Rd. (Opp Kabs Hotel)
+                kyetume Gayaza Manyagwa factory
               </p>
             </div>
           </div>

@@ -24,15 +24,8 @@ export default function Footer() {
               <div className="flex items-start space-x-3">
                 <MapPin className="h-5 w-5 text-brand-accent flex-shrink-0 mt-0.5" />
                 <div>
-                  <span className="block">Gayaza Town</span>
+                  <span className="block">Kyetume Gayaza Manyagwa factory</span>
                   <span className="block text-white/60">Gayaza, Wakiso</span>
-                </div>
-              </div>
-              <div className="flex items-start space-x-3">
-                <MapPin className="h-5 w-5 text-brand-accent flex-shrink-0 mt-0.5" />
-                <div>
-                  <span className="block">Maganjo Bombo Rd.</span>
-                  <span className="block text-white/60">Opp Kabs Hotel</span>
                 </div>
               </div>
               <div className="flex items-center space-x-3">
@@ -63,11 +56,6 @@ export default function Footer() {
                 <Link to="/contact" className="text-white/80 hover:text-brand-accent transition-colors">
                   Contact Us
                 </Link>
-              </li>
-              <li>
-                <a href="https://www.2zcityfurniture.com" target="_blank" rel="noreferrer" className="text-white/80 hover:text-brand-accent transition-colors">
-                  Old Website
-                </a>
               </li>
             </ul>
           </div>
