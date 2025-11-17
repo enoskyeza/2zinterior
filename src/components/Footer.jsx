@@ -24,15 +24,8 @@ export default function Footer() {
               <div className="flex items-start space-x-3">
                 <MapPin className="h-5 w-5 text-brand-accent flex-shrink-0 mt-0.5" />
                 <div>
-                  <span className="block">Gayaza Town</span>
+                  <span className="block">Kyetume Gayaza Manyagwa factory</span>
                   <span className="block text-white/60">Gayaza, Wakiso</span>
-                </div>
-              </div>
-              <div className="flex items-start space-x-3">
-                <MapPin className="h-5 w-5 text-brand-accent flex-shrink-0 mt-0.5" />
-                <div>
-                  <span className="block">Maganjo Bombo Rd.</span>
-                  <span className="block text-white/60">Opp Kabs Hotel</span>
                 </div>
               </div>
               <div className="flex items-center space-x-3">
