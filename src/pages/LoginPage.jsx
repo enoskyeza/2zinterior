@@ -142,11 +142,11 @@ export default function LoginPage() {
                   </Link>
                 </p>
                 
-                <div className="mt-6 pt-6 border-t border-gray-200">
-                  <p className="text-xs text-gray-500 text-center">
+                {/* <div className="mt-6 pt-6 border-t border-gray-200"> */}
+                  {/* <p className="text-xs text-gray-500 text-center">
                     Demo credentials: <span className="font-mono">admin@2zcity.com</span> / <span className="font-mono">password</span>
                   </p>
-                </div>
+                </div> */}
               </form>
             </div>
           </div>
